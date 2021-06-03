@@ -1,0 +1,401 @@
+drop table veiculos cascade constraint;
+drop table veiculos_opcionais cascade constraint;
+drop table opcionais cascade constraint;
+drop table tipos cascade constraint;
+drop table cores cascade constraint;
+drop table carros cascade constraint;
+drop table marcas cascade constraint;
+drop table modelos cascade constraint;
+drop table transmissoes cascade constraint;
+drop table motores cascade constraint;
+drop table combustiveis cascade constraint;
+drop table lojas cascade constraint;\par
+drop table lojas_telefones cascade constraint;
+
+
+create table veiculos(
+cod_placa varchar(8)  not null,
+cod_carro number(6) not null,
+cod_modelo number(3) not null,
+cod_cor number(3) not null,
+cod_tipo number(3) not null,
+cod_transmissao varchar(1) not null,
+cod_motor number(3) not null,
+cod_combustivel number(3) not null,
+cod_loja number(3) not null,
+qtd_portas number(1) not null,
+ano_fabricacao number(4) not null,
+ano_modelo number(4) not null,
+val_veiculo number(11,2) not null,
+cod_veiculo number(6) not null,
+);
+
+
+
+create table veiculos_opcionais
+cod_veiculo number(6) not null,
+cod_opcional number(3) not null
+);
+
+
+
+create table opcionais(
+cod_opcional number(3) not null,
+dsc_opcional varchar(50) not null
+);
+
+
+
+create table tipos(\par
+cod_tipo number(3) not null,
+dsc_tipo varchar2(50) not null
+);
+
+
+
+create table cores(
+cod_cor number(3) not null,
+nom_cor varchar(50) not null
+);
+
+
+create table carros(
+cod_carro number(6) not null,
+nom_marca varchar2(100) not null
+);
+
+
+
+create table modelo(
+cod_modelo number(3) not null,
+dsc_modelo varchar(50) not null
+);
+
+
+create table transmissoes(
+cod_transmissao varchar2(1) not null,
+dsc_transmissao varchar(50) not null
+);
+
+
+create table marcas(
+cod_marcas number(3) not null,
+nom_marcas varchar2(100) not null
+);
+
+
+
+create table motores(
+cod_motor number(3) not null,
+dsc_motor varchar2(6) not null
+);
+
+
+
+create table combustiveis(
+cod_combustivel number(3) not null,
+dsc_combustivel  varchar2(50) not null,
+obs_combustivel  varchar2(100) not null
+);
+
+
+create table lojas(
+cod_loja number(3) not null,
+nom_loja varchar2(100) not null,
+end_loja varchar2(100) not null,
+nom_bairro_loja varchar2(100) not null
+);
+
+
+create table lojas_telefones(
+cod_loja number(3) not null,
+cod_telefone number(3) not null,
+num_telefone number(8) not null,
+nom_bairro_loja varchar2(100) not null,
+tipo_telefone  varchar2(1) not null
+);
+
+
+alter table veiculos
+add constraint  pk_veiculos
+primary key  (cod_veiculo);
+
+alter table veiculos_opcionais
+add constraint  pk_veiculos_opcionais
+primary key  (cod_veiculo,cod_opcional);
+
+alter table opcionais
+add constraint  pk_opcionais
+primary key  (cod_opcional);
+
+alter table tipos
+add constraint  pk_tipos
+primary key  (cod_tipo);
+
+alter table cores
+add constraint  pk_corres
+primary key  (cod_opcional);
+
+alter table carros
+add constraint  pk_carros
+primary key  (cod_carro);
+
+alter table marcas
+add constraint  pk_marcas
+primary key  (cod_marca);
+
+alter table modelos
+add constraint  pk_modelos
+primary key  (cod_modelo);
+
+alter table transmissoes
+add constraint  pk_transmissoes
+primary key  (cod_transmissao);
+
+alter table motores
+add constraint  pk_motores
+primary key  (cod_motor);
+
+alter table combustiveis
+add constraint  pk_combustiveis
+primary key  (cod_combustivel);
+
+alter table lojas
+add constraint  pk_lojas
+primary key  (cod_loja);
+
+alter table lojas_telefones
+add constraint  pk_lojas_telefones
+primary key  (cod_loja,cod_telefone);
+
+alter table 	carros
+add constraint	fk_carros
+foreign key	(od_placa,cod_veiculo)
+references	veiculos(cod_placa,cod_veiculo);
+
+alter table 	veiculos_opcionais
+add constraint	fk_veiculos_opcionais
+foreign key	(cod_placa,cod_veiculo)
+references	veiculos(cod_placa,cod_veiculo);
+
+alter table 	veiculos_opcionais
+add constraint	fk1_veiculos_opcionais
+foreign key	(cod_opcional)
+references	veiculos(cod_placa,cod_veiculo);
+
+alter table 	veiculos_opcionais
+add constraint	fk1_veiculos_opcionais
+foreign key	(cod_placa,cod_veiculo)
+references	veiculos(cod_placa,cod_veiculo);
+
+
+alter table 	lojas_telefones
+add constraint	fk1_lojas_telefones
+foreign key	(cod_loja)
+references	veiculos(cod_loja);
+
+alter table 	veiculos
+add constraint	fk1_veiculos
+foreign key	(cod_modelo,cod_marca,cod_carro,cod_cor,cod_tipo,cod_opcional,cod_veiculo,cod_transmissao,cod_motor,cod_combustivel,cod_loja,cod_telefone)
+references	veiculos(cod_modelo,cod_marca,cod_carro,cod_cor,cod_tipo,cod_opcional,cod_veiculo,cod_transmissao,cod_motor,cod_combustivel,cod_loja,cod_telefone);
+
+
+alter lojas_telefones
+add constraint uk_lojas_telefones
+unique (num_telefone);
+
+alter table veiculos
+add constraint veiculos_ck
+check (ano_fabricacao < ano_modelo);
+
+insert into marcas
+values (01,'fiat');
+
+insert into marcas
+values (02,'bmw');
+
+insert into marcas
+values (03,'volkswagem');
+
+insert into marcas
+values (04,'general motors');
+
+insert into marcas
+values (05,'kia');
+
+insert into marcas
+values (06,'nissan');
+
+insert into marcas
+values (07,'honda');
+
+insert into marcas
+values (08,'toyota');
+
+insert into carros
+values (01,'uno');
+
+insert into carros
+values (02,'m5');
+
+insert into carros
+values (03,'fox');
+
+insert into carros
+values (04,'agile');
+
+insert into carros
+values (05,'soul');
+
+insert into carros
+values (06,'livina');
+
+insert into carros
+values (07,'civic');
+
+insert into carros
+values (08,'corolla');
+
+insert into carros
+values (09,'s10');
+
+insert into cores
+values (01,'preto');
+
+insert into cores
+values (02,'branco');
+
+insert into cores
+values (03,'amarelo');
+
+insert into cor
+values (04,'azul');
+
+
+insert into cores
+values (05,'vermelho');
+
+
+insert into cores
+values (06,'verde');
+
+
+insert into tipos
+values (01,'passeio');
+
+insert into tipos
+values (02,'utilitario');
+
+insert into opcionais
+values (01,'ar-condicionado');
+
+insert into opcionais
+values (02,'trio eletrico');
+
+insert into opcionais
+values (03,'direcao hidraulica');
+
+insert into opcionais
+values (04,'direcao eletrica');
+
+insert into opcionais
+values (05,'abs');
+
+insert into opcionais
+values (06,'ebd');
+
+insert into opcionais
+values (07,'som');
+
+insert into opcional
+values (08,'dvd');
+
+insert into modelos
+values (01,'vivace');
+
+insert into modelos
+values (02,'gls');
+
+insert into modelos
+values (03,'serie7');
+
+insert into modelos
+values (04,'crossever');
+
+insert into modelos
+values (05,'hatch');
+
+insert into modelos
+values (06,'compact');
+
+insert into veiculo_opcionais
+values (01,'xxxxxx',");
+
+insert into veiculo_opcionais
+values (02,'xxxxxx',");
+
+insert into veiculo_opcionais
+values (03,'xxxxxx',");
+
+insert into transmissores
+values (01,'manual');
+
+insert into transmissores
+values (02,'automatico');
+
+insert into transmissores
+values (03,'semi-automatico');
+
+insert into transmissores
+values (04,'cvt');
+
+insert into transmissores
+values (05,'sequencial');
+
+insert into motores
+values (01,'1.0');
+
+insert into motores
+values (02,'1.4');
+
+insert into motores
+values (03,'1.6');
+
+insert into motor
+values (04,'1.8');
+
+insert into motores
+values (05,'2.0');
+
+insert into motores
+values (06,'2.4');
+
+insert into combustiveis
+values (01,'alcool');
+
+insert into combustiveis
+values (02,'gasolina');
+
+insert into combustiveis
+values (03,'flex');
+
+insert into combustiveis
+values (04,'diesel');
+
+insert into lojas
+values (01,'max carros');
+
+insert into lojas
+values (02,'mutt carros');
+
+insert into lojas
+values (03,'My carros');
+
+insert lojas_telefones
+values (01,'2222-3333');
+
+insert into lojas
+values (02,'8888-9999');
+
+insert into lojas
+values (03,'1111-5555');
