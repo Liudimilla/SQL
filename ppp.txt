@@ -1,0 +1,278 @@
+--Thiago Vinicius   RA:3015201848
+
+drop table usuarios cascade constraint;
+drop table municipio cascade constraint;
+drop table emprestimos cascade constraint;
+drop table autores_has_obra cascade constraint;
+drop table editora cascade constraint;
+drop table obra cascade constraint;
+drop table tipodemidia cascade constraint;
+drop table autores cascade constraint;
+drop table emprestimos_autores_obra cascade constraint;
+drop table estado cascade constraint;
+drop table pais cascade constraint;
+
+
+--Criação de tabelas
+
+create table usuarios(
+iddono number not null,
+nomedono varchar2(50)not null,
+endereco varchar2(100)not null,
+bairro varchar2(45)not null,
+cpf number not null,
+telefone varchar2(45)not null,
+rg varchar2(45)not null,
+nacimentoUsuario date not null,
+datacadastro date not null,
+datacurso date not null,
+finalcurso date not null,
+municipio_idmunicipio number not null,
+emprestimos_idemprestimo number not null);
+
+create table emprestimos(
+idemprestimo number not null,
+retirada date not null,
+entrega date not null,
+atrasodias varchar2(45)not null,
+multa varchar2(45)not null);
+
+create table municipio(
+idmunicipio number not null,
+nomedomunicipio varchar2(150)not null,
+estado_idestado number not null,
+pais_idpais number not null);
+
+create table editora(
+ideditora number not null,
+nomeeditora varchar2(45),
+municipio_idmunicipio number not null);
+
+create table autores_has_obra(
+autores_idautores number not null,
+obra_idobra number not null);
+
+
+create table emprestimos_autores_obra(
+emprestimos_idemprestimo number not null,
+autores_obra_autores_idautores number not null,
+autores_has_obra_obra_idobra number not null);
+
+create table autores(
+idautores number not null,
+nomeautor varchar2(150)not null,
+pais_idpais number not null);
+
+create table obra(
+idobra number not null,
+nomeobra varchar2(45)not null,
+anoobra date not null,
+tipodemidia_idtipodemidia number not null);
+
+create table tipodemidia(
+idtipodemidia number not null,
+nomemidia varchar2(45)not null);
+
+create table estado(
+idestado number not null,
+nomedoestado varchar2(100)not null);
+
+create table pais(
+idpais number not null,
+nomedopais varchar2(100)not null);
+
+
+--Definindo as PK,FK,UK e CK
+
+--INICIO PK
+
+alter table 	usuarios
+add constraint	pk_usuarios
+primary key	(iddono);
+
+alter table 	municipio
+add constraint	pk_municipio
+primary key	(idmunicipio);
+
+alter table 	editora
+add constraint	pk_editora
+primary key	(ideditora,municipio_idmunicipio);
+
+alter table 	emprestimos
+add constraint	pk_emprestimos
+primary key	(idemprestimo);
+
+alter table 	emprestimos_autores_obra
+add constraint	pk_emprestimos_autores_obra
+primary key	(emprestimos_idemprestimo,autores_obra_autores_idautores,autores_has_obra_obra_idobra);
+
+alter table 	autores_has_obra
+add constraint	pk_autores_has_obra
+primary key	(autores_idautores,obra_idobra);
+
+
+alter table 	obra
+add constraint	pk_obra
+primary key	(idobra);
+
+
+alter table 	autores
+add constraint	pk_autores
+primary key	(idautores,Pais_idPais);
+
+
+alter table 	tipodemidia
+add constraint	pk_tipodemidia
+primary key	(idtipodemidia);
+
+
+alter table 	estado
+add constraint	pk_estado
+primary key	(idestado);
+
+
+alter table 	pais
+add constraint	pk_pais
+primary key	(idpais);
+
+--FIM PK
+
+--INICIO FK
+
+alter table 	usuarios
+add constraint	fk_usuarios
+foreign key	(municipio_idmunicipio)
+references	municipio(idmunicipio);
+
+
+alter table 	usuarios
+add constraint	fk1_usuarios
+foreign key	(emprestimos_idemprestimo)
+references	emprestimos(idemprestimo);
+
+
+alter table 	municipio
+add constraint	fk_municipio
+foreign key	(estado_idestado)
+references	estado(idestado);
+
+alter table 	municipio
+add constraint	fk1_municipio
+foreign key	(pais_idpais)
+references	pais(idpais);
+
+
+alter table 	obra
+add constraint	fk_obra
+foreign key	(tipodemidia_idtipodemidia)
+references	tipodemidia(idtipodemidia);
+
+-- FIM FK
+
+--INICIO UK
+
+alter table usuarios
+add constraint uk_usuarios
+unique (cpf);
+
+alter table usuarios
+add constraint uk1_usuarios
+unique (rg);
+
+--FIM UK
+
+--INICIO CK
+
+alter table usuarios
+add constraint usuarios_ck
+check (datacurso < finalcurso);
+
+--FINAL CK
+
+--INICIO INSERT
+
+insert into estado
+values (01,'sp');
+insert into estado
+values (02,'rj');
+insert into estado
+values (03,'bh');
+insert into estado
+values (04,'rs');
+insert into estado
+values (05,'GO');
+
+insert into Pais
+values (01,'Brasil');
+insert into Pais
+values (02,'EUA');
+
+
+insert into emprestimos
+values (01,'01/02/2010','05/12/2009',10,100);
+insert into emprestimos
+values (02,'11/05/2011','02/11/2011',15,500);
+
+insert into municipio
+values (01,'são paulo',01,01);
+insert into municipio
+values (02,'Osasco',01,01);
+insert into municipio
+values (03,'Santana do Parnaiba',01,01);
+insert into municipio
+values (04,'Sorocaba',01,01);
+insert into municipio
+values (05,'Santos',01,01);
+
+
+insert into usuarios
+values (01,'João','rua carlos','ana rosa',43098575830,45112088,9821562339,'20/04/1990','15/05/2005','12/07/2006','13/04/2007',01,01);
+insert into usuarios
+values (02,'Pedro','rua do orfanato','centro',43098575885,45111188,9821562385,'25/05/1995','15/05/2006','15/11/2006','13/06/2007',02,01);
+insert into usuarios
+values (03,'Ana','Avenida Barão','Miranda',85298575830,48112088,8521562339,'11/04/1992','15/05/2008','09/07/2009','13/04/2010',03,02);
+insert into usuarios
+values (04,'Maria','rua felipe','vila prudente',11198575830,35742088,0121562339,'20/04/1985','20/12/2008','12/07/2009','13/04/2010',04,01);
+insert into usuarios
+values (05,'Helena','rua dos sonhos','centro',43000575830,45112000,9001562339,'27/04/1995','20/05/2003','15/07/2006','13/04/2008',05,02);
+
+
+insert into editora
+values (01,'Saraiva',01);
+insert into editora
+values (02,'Brasport',05);
+insert into editora
+values (03,'Elsevier',02);
+
+insert into autores
+values (01,'Soraia',01);
+insert into autores
+values (02,'Ana Maria',01);
+insert into autores
+values (03,'Juca Pires',01);
+insert into autores
+values (04,'Mikel',02);
+insert into autores
+values (05,'Soares',01);
+
+insert into tipodemidia
+values (01,'CD');
+insert into tipodemidia
+values (02,'DVD');
+
+insert into obra
+values (01,'Picasso','05/04/1952',01);
+insert into obra
+values (02,'Crise Politica','05/04/2012',02);
+
+insert into autores_has_obra
+values (04,01);
+insert into autores_has_obra
+values (01,02);
+
+insert into emprestimos_autores_obra
+values (01,01,02);
+insert into emprestimos_autores_obra
+values (02,04,01);
+
+--FIM INSERT
